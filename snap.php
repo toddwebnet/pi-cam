@@ -1,13 +1,91 @@
+#!/usr/bin/php
 <?php
 
 // imagemagick
 // [ "$( compare -metric rmse zelda3.jpg zelda3.jpg null: 2>&1 )" = "0 (0)" ] && echo "same" || echo "not same"
 
+leaveIfAlreadyRunning();
+$lip = new LastImagePath();
 $dir = realpath(__DIR__ . '/public/images/');
-for ($x = 0; $x < 10; $x++) {
+while (true) {
     $ts = time();
-    exec("fswebcam --no-banner -r 640 {$dir}/{$ts}.jpg");
-    print "\n\n" . time() - $ts . "\n\n";
+    $imagePath = "{$dir}/{$ts}.jpg";
+    runCmd("fswebcam --no-banner -r 640 {$imagePath}");
+    compareImagesAndDeleteIfDupe($imagePath, $lip->getLastImagePath());
+    $lip->setLastImagePath($imagePath);
 }
 
+/********************************************************************************************************/
+/********************************************************************************************************/
+/********************************************************************************************************/
+
+function compareImagesAndDeleteIfDupe($new, $old)
+{
+    if ($old == "")
+        return;
+
+    $cmd = '[ "$( compare -metric rmse ' . $new . ' ' . $old . ' null: 2>&1 )" = "0 (0)" ] && echo "same" || echo "not same"';
+    print_r(runCmd($cmd));
+}
+
+function runCmd($cmd)
+{
+    ob_start();
+    exec("{$cmd} 2> /dev/null", $output, $result);
+    // $op = ob_get_contents();
+    ob_end_clean();
+    return $output;
+}
+
+function leaveIfAlreadyRunning()
+{
+    $myPid = getmypid();
+    $cmdPattern = "/usr/bin/php ./snap.php";
+    $cmd = 'ps -ef | awk \'/snap.php/{print $2"@"$8" "$9}\'';
+    foreach (runCmd($cmd) as $line) {
+        $ar = explode("@", $line);
+        if ($ar[1] == $cmdPattern && $ar[0] != $myPid) {
+            print "leaving";
+            exit();
+        }
+    }
+}
+
+/********************************************************************************************************/
+/********************************************************************************************************/
+
+/********************************************************************************************************/
+
+class LastImagePath
+{
+    protected $lastImagePath;
+    protected $filePath;
+
+    public function __construct()
+    {
+        $this->filePath = __DIR__ . '/lastimage.txt';
+        $this->setPathFromFile();
+    }
+
+    public function getLastImagePath()
+    {
+
+        return $this->lastImagePath;
+    }
+
+    public function setLastImagePath($imagePath)
+    {
+        $this->lastImagePath = $imagePath;
+        file_put_contents($this->filePath, $imagePath);
+    }
+
+    private function setPathFromFile()
+    {
+        if (!file_exists($this->filePath)) {
+            return null;
+        }
+        $this->lastImagePath = trim(file_get_contents($this->filePath));
+    }
+
+}
 
