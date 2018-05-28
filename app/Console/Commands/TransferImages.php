@@ -51,7 +51,6 @@ class TransferImages extends Command
         if (!file_exists($targetPath)) {
             mkdir($targetPath);
         }
-
         rename($sourcePath . '/' . $info->basename, $targetPath . '/' . $info->basename);
     }
 
@@ -63,7 +62,7 @@ class TransferImages extends Command
     private function leaveIfAlreadyRunning()
     {
         $myPid = getmypid();
-        $cmdPattern = "php artisan transfer:images";
+        $cmdPattern = "php /var/www/pi-cam/artisan transfer:images";
         $cmd = 'ps -ef | awk \'/artisan/{print $2"@"$8" "$9" "$10}\'';
         foreach ($this->runCmd($cmd) as $line) {
             $ar = explode("@", $line);
@@ -77,7 +76,7 @@ class TransferImages extends Command
     private function runCmd($cmd)
     {
         ob_start();
-        exec("{$cmd} 2> /dev/null", $output, $result);
+        exec("{$cmd}", $output, $result);
         // $op = ob_get_contents();
         ob_end_clean();
         return $output;
