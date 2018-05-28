@@ -11,7 +11,8 @@ while (true) {
     $fileName = "{$ts}.jpg";
     $imagePath = "{$dir}/{$fileName}";
     runCmd("fswebcam --no-banner -r 640 {$imagePath}");
-    runCmd("mv {$imagePath} /var/www/pi-cam-bb/storage/images/{$fileName}");
+    runCmd("cp {$imagePath} /var/www/pi-cam-bb/storage/images/{$fileName}");
+    runCmd("rm {$imagePath}");
 }
 
 /********************************************************************************************************/
@@ -30,7 +31,7 @@ function compareImagesAndDeleteIfDupe($new, $old)
 function runCmd($cmd)
 {
     ob_start();
-    exec("{$cmd} 2> /dev/null", $output, $result);
+    $op = exec("{$cmd} 2> /dev/null", $output, $result);
     // $op = ob_get_contents();
     ob_end_clean();
     return $output;
