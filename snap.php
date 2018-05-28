@@ -39,7 +39,7 @@ function runCmd($cmd)
 function leaveIfAlreadyRunning()
 {
     $myPid = getmypid();
-    $cmdPattern = "/usr/bin/php ./snap.php";
+    $cmdPattern = "/usr/bin/php /var/www/pi-cam/snap.php";
     $cmd = 'ps -ef | awk \'/snap.php/{print $2"@"$8" "$9}\'';
     foreach (runCmd($cmd) as $line) {
         $ar = explode("@", $line);
