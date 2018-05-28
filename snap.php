@@ -5,14 +5,13 @@
 // [ "$( compare -metric rmse zelda3.jpg zelda3.jpg null: 2>&1 )" = "0 (0)" ] && echo "same" || echo "not same"
 
 leaveIfAlreadyRunning();
-$lip = new LastImagePath();
 $dir = realpath(__DIR__ . '/public/images/');
 while (true) {
     $ts = time();
-    $imagePath = "{$dir}/{$ts}.jpg";
+    $fileName = "{$ts}.jpg";
+    $imagePath = "{$dir}/{$fileName}";
     runCmd("fswebcam --no-banner -r 640 {$imagePath}");
-    compareImagesAndDeleteIfDupe($imagePath, $lip->getLastImagePath());
-    $lip->setLastImagePath($imagePath);
+    runCmd("mv {$imagePath} /var/www/pi-cam-bb/storage/images/{$fileName}");
 }
 
 /********************************************************************************************************/
