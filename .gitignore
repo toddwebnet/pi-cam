@@ -4,7 +4,9 @@
 /public/hot
 /public/images/*.jpg
 /public/storage
+/public/images/*
 /storage/*.key
+/storage/images/*
 /.idea
 /.vagrant
 /vendor
