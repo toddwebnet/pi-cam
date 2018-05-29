@@ -66,8 +66,21 @@
 </head>
 <body>
 <div class="flex-center position-ref full-height">
-    <img id="thebox" style="width: 640px;height: 480px;"/>
-<input type="text" id="counter"/>
+    <table>
+        <tr>
+            <td>
+                <img id="thebox" style="width: 640px;height: 480px;"/>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <input type="text" id="counter" style="width: 140px;"/>
+
+                <input type="text" id="file" style="width: 485px;"/>
+            </td>
+        </tr>
+    </table>
     <script language="JavaScript">
       var pics;
       json = '<?=$files?>';
@@ -75,12 +88,14 @@
 
       loopyloop(0);
 
-      function loopyloop(i){
+      function loopyloop(i) {
         if (i >= pics.length) {
           return;
         }
-        document.getElementById('thebox').src= pics[i];
+        document.getElementById('thebox').src = pics[i];
         document.getElementById('counter').value = i;
+        document.getElementById('file').value = pics[i];
+
         i++;
 
         setTimeout("loopyloop(" + i + ")", {{$interval}});

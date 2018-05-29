@@ -13,4 +13,5 @@
 
 
 Route::get('/', 'HomeController@index');
+Route::get('/last', 'HomeController@last');
 

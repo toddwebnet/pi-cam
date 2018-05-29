@@ -1,10 +1,9 @@
 #!/usr/bin/php
 <?php
-
-// imagemagick
-// [ "$( compare -metric rmse zelda3.jpg zelda3.jpg null: 2>&1 )" = "0 (0)" ] && echo "same" || echo "not same"
+date_default_timezone_set('America/Chicago');
 
 leaveIfAlreadyRunning();
+
 $dir = realpath(__DIR__ . '/public/images/');
 while (true) {
     $ts = time();
