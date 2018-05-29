@@ -37,7 +37,9 @@ class TransferImages extends Command
         }
         $sourcePath = realpath(app_path('../storage/images'));
         $targetPath = realpath(app_path('../public/images'));
+
         $date = Carbon::createFromTimestamp($ts);
+        $date->timezone = "America/Chicago";
         list($year, $month, $day) = explode('-', $date->toDateString());
         $targetPath .= '/' . $year;
         if (!file_exists($targetPath)) {
